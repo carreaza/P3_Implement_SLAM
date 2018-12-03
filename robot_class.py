@@ -1,5 +1,6 @@
 from math import *
 import random
+import numpy as np
 
 
 ### ------------------------------------- ###
@@ -79,9 +80,9 @@ class robot:
            
         measurements = []
         
-        ## TODO: iterate through all of the landmarks in a world
+        ## iterate through all of the landmarks in a world
         
-        ## TODO: For each landmark
+        ## For each landmark
         ## 1. compute dx and dy, the distances between the robot and the landmark
         ## 2. account for measurement noise by *adding* a noise component to dx and dy
         ##    - The noise component should be a random value between [-1.0, 1.0)*measurement_noise
@@ -90,7 +91,17 @@ class robot:
         ##    then we cannot record them; if they do fall in the range, then add them to the measurements list
         ##    as list.append([index, dx, dy]), this format is important for data creation done later
         
-        ## TODO: return the final, complete list of measurements
+        ## return the final, complete list of measurements
+        for index,landmark in enumerate(self.landmarks):
+            noise_meas = self.rand() * self.measurement_noise
+            dx = - self.x + landmark[0] + noise_meas
+            dy = - self.y + landmark[1] + noise_meas
+
+            distance = np.sqrt(dx*dx + dy*dy)
+            
+            if distance < self.measurement_range: 
+                measurements.append([index,dx,dy])
+                
         return measurements
 
 
